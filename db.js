@@ -3,7 +3,7 @@ const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 
 // Connection URL
-const host = process.env.MONGO_HOST || 'localhost';
+const host = process.env.MONGO_HOST || 'ec2-54-213-136-50.us-west-2.compute.amazonaws.com:27017';
 const url = `mongodb://${host}:27017`;
 
 // Database Name
