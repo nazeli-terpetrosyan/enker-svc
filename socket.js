@@ -1,4 +1,4 @@
-var socketIO = require('socket.io');
+    var socketIO = require('socket.io');
 var db = require('./db');
 
 function connect(server) {
@@ -21,9 +21,69 @@ function usersNamespace(io) {
     // TODO: add listener for drawing
 
     // TODO: add listener for logging in, update flag loggedIn in Database, join room
+    socket.on('login', user => {
+      socket.join(user.email);
+
+      db.getClient().collection("students").findOneAndUpdate(
+        {email: user.email},
+        {$set: {'loggedIn': true}},
+        {returnOriginal: false},
+        function(err, results) {
+          if(err){
+            socekt.emit('list error', err);
+          }
+          else if(results.value == null) {
+            socket.emit('list error', {error: "Student with email "});
+          }
+          else{
+            users.emit('logged in', results.value);
+          }
+        }
+      )
+    });
 
     // TODO: add listener on 'disconnect' to log out user, and emit
+    socket.on('logout', user => {
+      socket.join(user.email);
 
+      db.getClient().collection("students").findOneAndUpdate(
+        {email: user.email},
+        {$set: {'loggedIn': false}},
+        {returnOriginal: false},
+        function(err, results) {
+          if(err){
+            socekt.emit('list error', err);
+          }
+          else if(results.value == null) {
+            socket.emit('list error', {error: "Student with email "});
+          }
+          else{
+            users.emit('logged out', results.value);
+          }
+        }
+      )
+    });
+
+    socket.on('disconnect', user => {
+      socket.join(user.email);
+
+      db.getClient().collection("students").findOneAndUpdate(
+        {email: user.email},
+        {$set: {'loggedIn': false}},
+        {returnOriginal: false},
+        function(err, results) {
+          if(err){
+            socekt.emit('list error', err);
+          }
+          else if(results.value == null) {
+            socket.emit('list error', {error: "Student with email "});
+          }
+          else{
+            users.emit('logged out', results.value);
+          }
+        }
+      )
+    });
     // TODO: add listener for logout message, update db, emit
     
     // TODO: add listener to search query
