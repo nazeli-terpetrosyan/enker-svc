@@ -17,7 +17,7 @@ db.students.insertMany([{
   "lastName": "Kyurkchyan",
   "password": "password",
   "learningTargets": [
-    "Game Development",
+    "Web Development",
   ],
   "location": "Gyumri"
 }

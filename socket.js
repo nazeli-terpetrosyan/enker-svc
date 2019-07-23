@@ -73,7 +73,7 @@ function usersNamespace(io) {
         {returnOriginal: false},
         function(err, results) {
           if(err){
-            socekt.emit('list error', err);
+            socket.emit('list error', err);
           }
           else if(results.value == null) {
             socket.emit('list error', {error: "Student with email "});
@@ -87,6 +87,21 @@ function usersNamespace(io) {
     // TODO: add listener for logout message, update db, emit
     
     // TODO: add listener to search query
+    socket.on('search', (query, fn) => {
+      const textCriteria = {$text: {$search: query}};
+      const learningTargetCriteria = {learningTargets: query};
+      const criteria = {$or: [textCriteria, learningTargetCriteria]};
+      db.getClient().collection("students").find(criteria).sort({}).toArray(
+        function(err, results) {
+          if(err){
+            socket.emit('list error', err);
+          }
+          else{  
+            fn(results);
+          }
+        }
+      )
+    });
   });
 }
 
