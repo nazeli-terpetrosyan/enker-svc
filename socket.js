@@ -13,6 +13,11 @@ function usersNamespace(io) {
   const users = io.of('/users');
   users.on('connection', socket => {
     // TODO: add listener for starting chat
+        socket.on('start-chat', (toUser, fromUser) => {
+          if (toUser) {
+            users.in(toUser.email).emit('start-chat', fromUser);
+          }
+        });
     
     // TODO: add listener to chat message
 
@@ -88,9 +93,12 @@ function usersNamespace(io) {
     
     // TODO: add listener to search query
     socket.on('search', (query, fn) => {
-      const textCriteria = {$text: {$search: query}};
-      const learningTargetCriteria = {learningTargets: query};
-      const criteria = {$or: [textCriteria, learningTargetCriteria]};
+      let criteria = {};
+      if(query){
+        const textCriteria = {$text: {$search: query}};
+        const learningTargetCriteria = {learningTargets: query};
+        criteria = {$or: [textCriteria, learningTargetCriteria]};
+      }
       db.getClient().collection("students").find(criteria).sort({}).toArray(
         function(err, results) {
           if(err){

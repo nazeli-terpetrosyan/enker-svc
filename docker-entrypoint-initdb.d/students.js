@@ -20,6 +20,16 @@ db.students.insertMany([{
     "Web Development",
   ],
   "location": "Gyumri"
+},
+{
+  "email": "tumo@gmail.com",
+  "firstName": "Anun",
+  "lastName": "Azganun",
+  "password": "password",
+  "learningTargets": [
+    "Game Development",
+  ],
+  "location": "Stepanakert"
 }
 ])
 
