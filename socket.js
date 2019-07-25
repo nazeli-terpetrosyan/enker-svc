@@ -27,6 +27,12 @@ function usersNamespace(io) {
     });
 
     // TODO: add listener for editor message WYSIWIG
+    socket.on('document', (text, toUser) => {
+      console.log(toUser);
+      if (toUser) {
+        users.in(toUser.email).emit('document', text);
+      }
+    });
 
     // TODO: add listener for drawing
 
