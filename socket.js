@@ -34,6 +34,11 @@ function usersNamespace(io) {
     });
 
     // TODO: add listener for drawing
+    socket.on('drawing-message', (toUser, fromUser, message) => {
+      if (toUser) {
+        users.in(toUser.email).emit('drawing-message', fromUser, message);
+      }
+    });
 
     // TODO: add listener for logging in, update flag loggedIn in Database, join room
     socket.on('login', user => {
